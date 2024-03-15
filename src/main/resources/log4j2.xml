@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="INFO">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{HH:mm:ss.SSSZ} [%t] %-5level  %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleLog" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8"/>
+        </Console>
+        <RollingFile name="FileErrorLog"
+                     fileName="./logs/error/error.log"
+                     filePattern="./logs/error/error-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10000KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="min" />
+        </RollingFile>
+        <RollingFile name="FileInfoLog"
+                     fileName="./logs/info/info.log"
+                     filePattern="./logs/info/info-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10000KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="min" />
+        </RollingFile>
+        <RollingFile name="FileAccessLog"
+                     fileName="./logs/access/access.log"
+                     filePattern="./logs/access/access-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}" charset="UTF-8" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10000KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" fileIndex="min" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="ConsoleLog"/>
+        </Root>
+        <Logger name="com.audrey.refeat" additivity="true">
+            <AppenderRef ref="FileErrorLog" />
+            <AppenderRef ref="FileInfoLog" />
+        </Logger>
+        <Logger name="org.springframework" additivity="true">
+            <AppenderRef ref="FileErrorLog" />
+        </Logger>
+        <Logger name="com.audrey.refeat.common.filter" level="info" additivity="true">
+            <AppenderRef ref="FileAccessLog" />
+        </Logger>
+    </Loggers>
+</Configuration>
